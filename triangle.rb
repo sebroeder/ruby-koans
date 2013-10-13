@@ -14,9 +14,34 @@
 #   about_triangle_project_2.rb
 #
 def triangle(a, b, c)
-  return :equilateral if a == b && b == c
-  return :isosceles   if a == b || b == c || a == c
-  return :scalene     # otherwise
+  fail TriangleError.new("Sides must be > 0") unless all_greater_zero?(a, b, c)
+  fail TriangleError.new("Sides must satisfy triangle inequality") unless triangle_inequality?(a, b, c)
+  
+  result = if equilateral?(a, b, c)
+             :equilateral
+           elsif isosceles?(a, b, c)
+             :isosceles
+           else
+             :scalene 
+           end
+end
+
+def equilateral?(a, b, c)
+  (a == b) && (b == c)
+end
+
+def isosceles?(a, b, c)
+  (a == b) || (b == c) || (a == c)
+end
+
+def all_greater_zero?(*args)
+  result = !args.empty?
+  args.each { |arg| result &= arg > 0 }
+  result
+end
+
+def triangle_inequality?(a, b, c)
+  (a + b > c) && (b + c > a) && (a + c > b) 
 end
 
 # Error class used in part 2.  No need to change this code.
